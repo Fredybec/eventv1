@@ -1,0 +1,12 @@
+start server
+start cli
+
+key * ==> find all
+flushdb ==> delete all
+monitor to monitor cli and lunch another cli to perform actions
+
+get "ev-1" ==> you'll get the value (if no hash is applied)
+hget "hash-key" "ev-1" ==> you'll get the value (if the hash is applied)
+
+set "ev-1" "zouani" ==> update or create key=ev-1 and value=zouani
+hset "hash-key" "ev-1" "zouani" ==> update or create key=ev-1 and value=zouani and zouani will be hashed

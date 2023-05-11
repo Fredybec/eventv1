@@ -156,13 +156,13 @@ public class EventApplication {
             }
         }
         try {
-            FileWriter fileWriter = new FileWriter("data.json");
+            FileWriter fileWriter = new FileWriter("data-20.json");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write("[\n" + res + "]");
             bufferedWriter.close();
-            System.out.println("Data saved successfully to data.json file.");
+            System.out.println("Data saved successfully to data-20.json file.");
         } catch (IOException e) {
-            System.out.println("Error while saving data to data.json file.");
+            System.out.println("Error while saving data to data-20.json file.");
             e.printStackTrace();
         }
         return res;

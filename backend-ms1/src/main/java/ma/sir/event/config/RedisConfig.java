@@ -1,4 +1,4 @@
-package ma.sir.event.configRedis;
+package ma.sir.event.config;
 
 import io.lettuce.core.RedisClient;
 import ma.sir.event.bean.core.EvenementRedis;
