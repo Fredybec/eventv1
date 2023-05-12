@@ -3,12 +3,23 @@ start cli
 
 keys * ==> find all
 hgetall Evenement ==> find all object in Evenement
-flushdb ==> delete all
+flushdb ==> delete all or flushall
 monitor to monitor cli and lunch another cli to perform actions
-
+del "ev-1" => delete key "ev-1"
 
 get "ev-1" ==> you'll get the value (if no hash is applied)
 hget "hash-key" "ev-1" ==> you'll get the value (if the hash is applied)
 
 set "ev-1" "zouani" ==> update or create key=ev-1 and value=zouani
 hset "hash-key" "ev-1" "zouani" ==> update or create key=ev-1 and value=zouani and zouani will be hashed
+
+setex myKey 10 myValue ==> set myKey with value of myValue and expire in 10 seconde
+ttl myKey ==> TIME to live for myKey
+setnx "ev-1" "zouani" ==> create key=ev-1 with value=zouani if the key not exist otherwise ignore
+strlen "ev-1" ==> 6 the length of zouani
+mset myKey1 myValue1 myKey2 myValue2
+decr myKey1 ==> decrement value of myKey1
+decrby myKey1 20 ==> decrement value of myKey1 by 20 value
+incr myKey1 ==> increment value of myKey1
+incrby myKey1 3 ==> increment value of myKey1 by 3
+append myKey " world" ==> get myKey "hello world"
