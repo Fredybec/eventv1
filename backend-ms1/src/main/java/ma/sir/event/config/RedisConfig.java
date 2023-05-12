@@ -2,6 +2,7 @@ package ma.sir.event.config;
 
 import io.lettuce.core.RedisClient;
 import ma.sir.event.bean.core.EvenementRedis;
+import ma.sir.event.ws.dto.EvenementDto;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -42,7 +43,7 @@ public class RedisConfig {
         template.setHashKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new JdkSerializationRedisSerializer());
         template.setEnableTransactionSupport(true);
-//        template.setDefaultSerializer(new Jackson2JsonRedisSerializer<>(EvenementRedis.class));
+        template.setDefaultSerializer(new Jackson2JsonRedisSerializer<>(EvenementDto.class));
         template.afterPropertiesSet();
         return template;
     }
