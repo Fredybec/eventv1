@@ -16,8 +16,8 @@ public class EvenementRedis  implements Serializable {
 
     @Column(length = 500)
     private String reference;
-    private LocalDateTime evenementStart ;
-    private LocalDateTime evenementEnd ;
+    private String evenementStart ;
+    private String evenementEnd ;
     @Column(length = 500)
     private String description;
 
@@ -41,19 +41,19 @@ public class EvenementRedis  implements Serializable {
         this.reference = reference;
     }
 
-    public LocalDateTime getEvenementStart() {
+    public String getEvenementStart() {
         return evenementStart;
     }
 
-    public void setEvenementStart(LocalDateTime evenementStart) {
+    public void setEvenementStart(String evenementStart) {
         this.evenementStart = evenementStart;
     }
 
-    public LocalDateTime getEvenementEnd() {
+    public String getEvenementEnd() {
         return evenementEnd;
     }
 
-    public void setEvenementEnd(LocalDateTime evenementEnd) {
+    public void setEvenementEnd(String evenementEnd) {
         this.evenementEnd = evenementEnd;
     }
 

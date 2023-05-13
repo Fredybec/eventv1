@@ -75,16 +75,10 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
 
     @ApiOperation("Saves the specified  evenement")
     @PostMapping("")
-    /*public ResponseEntity<EvenementDto> save(@RequestBody EvenementDto dto) throws Exception {
-      //if findByReference# null update database redis , if not save f redis and local
-       // redis.save
-        return super.save(dto);
-    }*/
-
-
     public ResponseEntity<EvenementDto> save(@RequestBody EvenementDto dto) throws Exception {
         String reference = dto.getReference();
-        EvenementRedis evenementRedis = evenementAdminRedisService.findByReference(reference);
+        String referenceBlocOperatoir = dto.getSalle().getBlocOperatoir().getReference();
+        EvenementRedis evenementRedis = evenementAdminRedisService.findByReference(referenceBlocOperatoir,reference);
         if (evenementRedis == null) {
             ResponseEntity<EvenementDto> savedResponse = super.save(dto);
             EvenementDto savedDto = savedResponse.getBody();
@@ -92,8 +86,8 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
             savedRedis.setId(savedDto.getId());
             savedRedis.setReference(savedDto.getReference());
             savedRedis.setDescription(savedDto.getDescription());
-            savedRedis.setEvenementEnd(DateUtil.stringEnToDate(savedDto.getEvenementEnd()));
-            savedRedis.setEvenementStart(DateUtil.stringEnToDate(savedDto.getEvenementStart()));
+           /* savedRedis.setEvenementEnd(DateUtil.stringEnToDate(savedDto.getEvenementEnd()));
+            savedRedis.setEvenementStart(DateUtil.stringEnToDate(savedDto.getEvenementStart()));*/
             savedRedis.setEvenementState(savedDto.getEvenementState());
             savedRedis.setSalle(savedDto.getSalle());
             evenementAdminRedisService.save(savedRedis);
@@ -106,8 +100,8 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
             updatedRedis.setId(updatedDto.getId());
             updatedRedis.setReference(updatedDto.getReference());
             updatedRedis.setDescription(updatedDto.getDescription());
-            updatedRedis.setEvenementEnd(DateUtil.stringEnToDate(updatedDto.getEvenementEnd()));
-            updatedRedis.setEvenementStart(DateUtil.stringEnToDate(updatedDto.getEvenementStart()));
+          /*  updatedRedis.setEvenementEnd(DateUtil.stringEnToDate(updatedDto.getEvenementEnd()));
+            updatedRedis.setEvenementStart(DateUtil.stringEnToDate(updatedDto.getEvenementStart()));*/
             updatedRedis.setEvenementState(updatedDto.getEvenementState());
             updatedRedis.setSalle(updatedDto.getSalle());
             evenementAdminRedisService.save(updatedRedis);
