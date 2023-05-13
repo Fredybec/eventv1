@@ -20,7 +20,7 @@ public class ClearEventCache {
 
     @Autowired
     private EvenementAdminRedisServiceImpl eventService;
-    @Scheduled(cron = "00 17 18 * * *")
+    @Scheduled(cron = "00 59 00 * * *")
     public void cleanOldEventsFromCache() {
         boolean isOlderEvent ;
         LocalDate extractedEventDate;
@@ -30,7 +30,7 @@ public class ClearEventCache {
                 extractedEventDate = extractAndConvertToLocalDate(event.getReference());
                 isOlderEvent  = compareDates(extractedEventDate);
                 deleteOldEventFromCache(isOlderEvent , event);
-                log.info("Event with reference "+event.getReference()+ " deleted with success");
+                logDeletingStatus(isOlderEvent, event);
             }
         }
     }
@@ -45,6 +45,11 @@ public class ClearEventCache {
     public void deleteOldEventFromCache(boolean isOlderEvent, EvenementRedis event){
         if(isOlderEvent) {
             eventService.deleteByReference(event.getReference());
+        }
+    }
+    public void logDeletingStatus(boolean isComparesDatesReturnsTrue, EvenementRedis event){
+        if (isComparesDatesReturnsTrue) {
+            log.info("Event with reference "+event.getReference()+ " deleted with success");
         }
     }
 }
