@@ -38,18 +38,18 @@ public class EvenementRedisRestAdmin  {
         return evenementAdminRedisService.save(evenement);
     }
 
-    @GetMapping("")
-    public List<EvenementRedis> findAll() {
-        return evenementAdminRedisService.findAll();
+    @GetMapping("/bloc-operatoire/{referenceBloc}")
+    public List<EvenementRedis> findAll(@PathVariable String referenceBloc) {
+        return evenementAdminRedisService.findAll(referenceBloc);
     }
 
-    @GetMapping("/{reference}")
-    public EvenementRedis findByReference(@PathVariable String reference) {
-        return evenementAdminRedisService.findByReference(reference);
+    @GetMapping("/bloc-operatoire/{referenceBloc}/reference/{reference}")
+    public EvenementRedis findByReference(@PathVariable String referenceBloc,@PathVariable String reference) {
+        return evenementAdminRedisService.findByReference(referenceBloc,reference);
     }
-    @DeleteMapping("/{reference}")
-    public int deleteByReference(@PathVariable String reference)   {
-        return evenementAdminRedisService.deleteByReference(reference);
+    @DeleteMapping("/bloc-operatoire/{referenceBloc}/reference/{reference}")
+    public int deleteByReference(@PathVariable String referenceBloc,@PathVariable String reference)   {
+        return evenementAdminRedisService.deleteByReference(referenceBloc,reference);
     }
 
 

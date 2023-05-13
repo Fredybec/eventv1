@@ -75,16 +75,10 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
 
     @ApiOperation("Saves the specified  evenement")
     @PostMapping("")
-    /*public ResponseEntity<EvenementDto> save(@RequestBody EvenementDto dto) throws Exception {
-      //if findByReference# null update database redis , if not save f redis and local
-       // redis.save
-        return super.save(dto);
-    }*/
-
-
     public ResponseEntity<EvenementDto> save(@RequestBody EvenementDto dto) throws Exception {
         String reference = dto.getReference();
-        EvenementRedis evenementRedis = evenementAdminRedisService.findByReference(reference);
+        String referenceBlocOperatoir = dto.getSalle().getBlocOperatoir().getReference();
+        EvenementRedis evenementRedis = evenementAdminRedisService.findByReference(referenceBlocOperatoir,reference);
         if (evenementRedis == null) {
             ResponseEntity<EvenementDto> savedResponse = super.save(dto);
             EvenementDto savedDto = savedResponse.getBody();
