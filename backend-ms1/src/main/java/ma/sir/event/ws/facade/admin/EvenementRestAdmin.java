@@ -163,10 +163,6 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
 
 
 
-
-
-
-
     @PutMapping("")
     public ResponseEntity<EvenementDto> update(@RequestBody EvenementDto dto) throws Exception {
         return super.update(dto);
