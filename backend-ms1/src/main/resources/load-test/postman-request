@@ -1,0 +1,24 @@
+{
+    "reference":"{{reference}}",
+    "description":"{{description}}",
+    "salle": {
+    "reference": "{{salle_reference}}",
+    "blocOperatoir": {
+      "reference": "{{blocOperatoir_reference}}"
+    }
+  }
+
+}
+
+
+---------------------------
+{
+    "reference": "EV-2_S-1_B-2_05-15-2023",
+    "description": "desc 2",
+    "salle": {
+      "reference": "salle1",
+      "blocOperatoir": {
+        "reference": "bloc2"
+      }
+    }
+  }
