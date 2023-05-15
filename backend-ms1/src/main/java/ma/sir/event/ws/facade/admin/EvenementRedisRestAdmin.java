@@ -19,7 +19,9 @@ import ma.sir.event.zynerator.dto.FileTempDto;
 import ma.sir.event.zynerator.util.PaginatedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
@@ -74,6 +76,14 @@ public class EvenementRedisRestAdmin  {
     public Mono<Long> deleteByReference(@PathVariable String referenceBloc, @PathVariable String reference) {
         return evenementAdminRedisService.deleteByReference(referenceBloc, reference);
     }
+    @GetMapping (value = "event/stream/{referenceBloc}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<EvenementRedis>> streamEvents(@PathVariable String referenceBloc) {
+        Flux<EvenementRedis> eventFlux = evenementAdminRedisService.findAll(referenceBloc);
+        return eventFlux.map(e -> ServerSentEvent.builder(e)
+                .id(e.getReference())
+                .event(e.getDescription())
+                .build());
 
+    }
 
 }
