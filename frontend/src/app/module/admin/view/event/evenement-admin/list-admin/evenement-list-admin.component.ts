@@ -11,6 +11,9 @@ import { EvenementStateService } from 'src/app/controller/service/EvenementState
 import {EvenementStateDto} from 'src/app/controller/model/EvenementState.model';
 import {SalleDto} from 'src/app/controller/model/Salle.model';
 import {WebsocketService} from "../../../../../../controller/service/websocket.service";
+import {BlocOperatoirDto} from "../../../../../../controller/model/BlocOperatoir.model";
+import {BlocOperatoirService} from "../../../../../../controller/service/BlocOperatoir.service";
+import {Observable, Subject} from "rxjs";
 
 
 
@@ -24,9 +27,9 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
     evenements: any[] = [];
     salles :Array<SalleDto>;
     evenementStates :Array<EvenementStateDto>;
-    websocketMessages: string[] = [];
-
-    constructor(evenementService: EvenementService,private webSocketService: WebsocketService, private salleService: SalleService, private evenementStateService: EvenementStateService) {
+    blocOperatoires :Array<BlocOperatoirDto>;
+    private selectedBloc: any;
+    constructor(evenementService: EvenementService,private blocOperatoirService : BlocOperatoirService, private webSocketService: WebsocketService, private salleService: SalleService, private evenementStateService: EvenementStateService) {
         super(evenementService);
 
     }
@@ -37,7 +40,7 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
       this.initCol();
       this.loadSalle();
       this.loadEvenementState();
-        this.connectWebSocket();
+        this.loadBlocOperatoire();
     }
 
     public async loadEvenements(){
@@ -46,7 +49,12 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
         isPermistted ? this.service.findAll().subscribe(evenements => this.items = evenements,error=>console.log(error))
         : this.messageService.add({severity: 'error', summary: 'erreur', detail: 'problème d\'autorisation'});
     }
-
+    public async loadBlocOperatoire(){
+        await this.roleService.findAll();
+        const isPermistted = await this.roleService.isPermitted('Evenement', 'list');
+        isPermistted ? this.blocOperatoirService.findAllOptimized().subscribe(blocOperatoires => this.blocOperatoires = blocOperatoires,error=>console.log(error))
+            : this.messageService.add({severity: 'error', summary: 'Erreur', detail: 'Problème de permission'});
+    }
 
     public initCol() {
         this.cols = [
@@ -98,22 +106,38 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
         //'Evenement state': this.criteria.evenementState?.reference ? this.criteria.evenementState?.reference : environment.emptyForExport ,
         }];
       }
-    /*private connectWebSocket() {
-        this.webSocketService.connect(); // connect to the WebSocket server
-        this.webSocketService.onMessage().subscribe((message: string) => {
-            this.websocketMessages.push(message);
-            // Handle the message received from the server
-            // You can update the component's state or call a method to handle the message
-        });
-    }*/
+    private subscribeToEventStream(referenceBloc: string) {
+        const eventSource = new EventSource(`http://localhost:8036/api/admin/evenement/redis/event/stream/${referenceBloc}`);
 
-    private connectWebSocket() {
-        this.webSocketService.connect('ws://localhost:8036/api/admin/salle/${salleId}').subscribe((message: MessageEvent) => {
-            this.websocketMessages.push(message.data);
-            // Handle the message received from the server
-            // You can update the component's state or call a method to handle the message
+        eventSource.addEventListener('open', function() {
+            console.log('Connection opened.');
         });
+
+        eventSource.addEventListener('message', (event: MessageEvent) => {
+            const eventObject = JSON.parse(event.data);
+            console.log(eventObject);
+            this.evenements.push(eventObject);
+            this.items = [...this.evenements];
+
+        });
+
+
     }
+
+
+     public onBlocSelected() {
+         this.subscribeToEventStream(this.selectedBloc.reference);
+
+     }
+
+
+
+
+
+
+
+
+
 
 
 }
