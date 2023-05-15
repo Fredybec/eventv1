@@ -10,6 +10,7 @@ import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 @Api("Manages evenement services")
 @RestController
@@ -58,14 +59,19 @@ public class EvenementRedisRestAdmin  {
     public Mono<Long> deleteByReference(@PathVariable String referenceBloc, @PathVariable String reference) {
         return evenementAdminRedisService.deleteByReference(referenceBloc, reference);
     }
-    @GetMapping (value = "event/stream/{referenceBloc}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ServerSentEvent<EvenementRedis>> streamEvents(@PathVariable String referenceBloc) {
-        Flux<EvenementRedis> eventFlux = evenementAdminRedisService.findAll(referenceBloc);
-        return eventFlux.map(e -> ServerSentEvent.builder(e)
-                .id(e.getReference())
-                .event(e.getDescription())
-                .build());
 
+    @GetMapping(value = "event/stream/{referenceBloc}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<EvenementRedis>> streamEvents(@PathVariable String referenceBloc) {
+        Sinks.Many<EvenementRedis> sink = evenementAdminRedisService.getOrCreateSink(referenceBloc);
+
+        Flux<EvenementRedis> eventFlux = evenementAdminRedisService.findAll(referenceBloc);
+        return eventFlux.concatWith(sink.asFlux())
+                .map(e -> ServerSentEvent.<EvenementRedis>builder()
+                        .id(e.getReference())
+                        .event(e.getDescription())
+                        .data(e)
+                        .build());
     }
+
 
 }
