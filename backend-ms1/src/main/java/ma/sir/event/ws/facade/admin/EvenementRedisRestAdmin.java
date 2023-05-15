@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 import java.util.List;
 
@@ -76,7 +77,9 @@ public class EvenementRedisRestAdmin  {
     public Mono<Long> deleteByReference(@PathVariable String referenceBloc, @PathVariable String reference) {
         return evenementAdminRedisService.deleteByReference(referenceBloc, reference);
     }
-    @GetMapping (value = "event/stream/{referenceBloc}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+
+
+    /*@GetMapping (value = "event/stream/{referenceBloc}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<EvenementRedis>> streamEvents(@PathVariable String referenceBloc) {
         Flux<EvenementRedis> eventFlux = evenementAdminRedisService.findAll(referenceBloc);
         return eventFlux.map(e -> ServerSentEvent.builder(e)
@@ -84,6 +87,27 @@ public class EvenementRedisRestAdmin  {
                 .event(e.getDescription())
                 .build());
 
+    }*/
+
+    /*@GetMapping(value = "event/stream/{referenceBloc}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<EvenementRedis>> streamEvents(@PathVariable String referenceBloc) {
+        Flux<EvenementRedis> eventFlux = evenementAdminRedisService.findAll(referenceBloc);
+        return sink.asFlux()
+                .map(e -> ServerSentEvent.<EvenementRedis>builder()
+                        .id(e.getReference())
+                        .event(e.getDescription())
+                        .data(e)
+                        .build());
+    }*/
+    @GetMapping(value = "event/stream/{referenceBloc}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<EvenementRedis>> streamEvents(@PathVariable String referenceBloc) {
+        Flux<EvenementRedis> eventFlux = evenementAdminRedisService.findAll(referenceBloc);
+        return eventFlux.concatWith(evenementAdminRedisService.getSink().asFlux())  // Merge eventFlux with the sink's Flux
+                .map(e -> ServerSentEvent.<EvenementRedis>builder()
+                        .id(e.getReference())
+                        .event(e.getDescription())
+                        .data(e)
+                        .build());
     }
 
 }

@@ -4,12 +4,10 @@ import ma.sir.event.bean.core.EvenementRedis;
 import ma.sir.event.ws.dto.BlocOperatoirDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
+import reactor.core.publisher.Sinks;
 
 @Service
 public class EvenementAdminRedisServiceImpl {
@@ -49,8 +47,19 @@ public class EvenementAdminRedisServiceImpl {
     }*/
 
 
+
+    private final  Sinks.Many<EvenementRedis> sink;
     @Autowired
     private ReactiveRedisTemplate<String, EvenementRedis> template;
+
+    public EvenementAdminRedisServiceImpl() {
+        this.sink = Sinks.many().multicast().onBackpressureBuffer();
+    }
+
+    public void sendEvent(EvenementRedis evenement) {
+        sink.tryEmitNext(evenement);
+    }
+
 
     public Mono<EvenementRedis> save(EvenementRedis evenement) {
         if (getBlocOperatoir(evenement) != null) {
@@ -58,6 +67,8 @@ public class EvenementAdminRedisServiceImpl {
                     .put(getBlocOperatoirReference(evenement), String.valueOf(evenement.getReference()), evenement)
                     .thenReturn(evenement)
                     .subscribe();
+
+            sink.tryEmitNext(evenement);
         }
         System.out.println("save" + evenement.getSalle().getBlocOperatoir().getReference());
 
@@ -94,4 +105,9 @@ public class EvenementAdminRedisServiceImpl {
     }
 
 
+
+
+    public Sinks.Many<EvenementRedis> getSink() {
+        return sink;
+    }
 }
