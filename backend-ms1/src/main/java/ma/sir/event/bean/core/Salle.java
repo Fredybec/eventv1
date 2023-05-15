@@ -68,7 +68,7 @@ public class Salle   extends AuditBusinessObject  implements Serializable {
     public void setCode(String code){
         this.code = code;
     }
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     public BlocOperatoir getBlocOperatoir(){
         return this.blocOperatoir;
     }

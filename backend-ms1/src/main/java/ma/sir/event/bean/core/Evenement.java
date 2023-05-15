@@ -89,7 +89,7 @@ public class Evenement   extends AuditBusinessObject implements Serializable {
     public void setEvenementEnd(LocalDateTime evenementEnd){
         this.evenementEnd = evenementEnd;
     }
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     public Salle getSalle(){
         return this.salle;
     }

@@ -5,39 +5,31 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import ma.sir.event.bean.core.Evenement;
 import ma.sir.event.bean.core.EvenementRedis;
-import ma.sir.event.bean.core.EvenementState;
 import ma.sir.event.bean.core.Salle;
 import ma.sir.event.bean.history.EvenementHistory;
 import ma.sir.event.dao.criteria.core.EvenementCriteria;
 import ma.sir.event.dao.criteria.history.EvenementHistoryCriteria;
 import ma.sir.event.dao.facade.core.EvenementDao;
 import ma.sir.event.service.facade.admin.EvenementAdminService;
-import ma.sir.event.service.facade.admin.EvenementStateAdminService;
 import ma.sir.event.service.facade.admin.SalleAdminService;
 import ma.sir.event.service.impl.admin.EvenementAdminRedisServiceImpl;
 import ma.sir.event.ws.converter.EvenementConverter;
-import ma.sir.event.ws.converter.EvenementStateConverter;
-import ma.sir.event.ws.converter.SalleConverter;
 import ma.sir.event.ws.dto.EvenementDto;
-import ma.sir.event.ws.dto.EvenementStateDto;
 import ma.sir.event.ws.dto.SalleDto;
 import ma.sir.event.zynerator.controller.AbstractController;
 import ma.sir.event.zynerator.dto.AuditEntityDto;
-import ma.sir.event.zynerator.util.DateUtil;
 import ma.sir.event.zynerator.util.PaginatedList;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.multipart.MultipartFile;
 import ma.sir.event.zynerator.dto.FileTempDto;
+import reactor.core.publisher.Mono;
 
 @Api("Manages evenement services")
 @RestController
@@ -73,12 +65,22 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
         return super.findById(id, includes, excludes);
     }
 
-    @ApiOperation("Saves the specified  evenement")
-    @PostMapping("")
+   // @ApiOperation("Saves the specified  evenement")
+   /* @PostMapping("")
     public ResponseEntity<EvenementDto> save(@RequestBody EvenementDto dto) throws Exception {
+
         String reference = dto.getReference();
         String referenceBlocOperatoir = dto.getSalle().getBlocOperatoir().getReference();
-        EvenementRedis evenementRedis = evenementAdminRedisService.findByReference(referenceBlocOperatoir,reference);
+        //Mono<EvenementRedis> evenementRedis = evenementAdminRedisService.findByReference(referenceBlocOperatoir,reference);
+        Mono<EvenementRedis> evenementRedis = evenementAdminRedisService.findByReference(referenceBlocOperatoir, reference).hasElement().flatMap(exists -> {
+            if (exists) {
+                return evenementAdminRedisService.findByReference(referenceBlocOperatoir, reference);
+            } else {
+                return Mono.empty();
+            }
+        });
+        System.out.println(reference);
+        System.out.println(evenementRedis);
         if (evenementRedis == null) {
             ResponseEntity<EvenementDto> savedResponse = super.save(dto);
             EvenementDto savedDto = savedResponse.getBody();
@@ -86,8 +88,8 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
             savedRedis.setId(savedDto.getId());
             savedRedis.setReference(savedDto.getReference());
             savedRedis.setDescription(savedDto.getDescription());
-           /* savedRedis.setEvenementEnd(DateUtil.stringEnToDate(savedDto.getEvenementEnd()));
-            savedRedis.setEvenementStart(DateUtil.stringEnToDate(savedDto.getEvenementStart()));*/
+           // savedRedis.setEvenementEnd(DateUtil.stringEnToDate(savedDto.getEvenementEnd()));
+           // savedRedis.setEvenementStart(DateUtil.stringEnToDate(savedDto.getEvenementStart()));
             savedRedis.setEvenementState(savedDto.getEvenementState());
             savedRedis.setSalle(savedDto.getSalle());
             evenementAdminRedisService.save(savedRedis);
@@ -100,14 +102,70 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
             updatedRedis.setId(updatedDto.getId());
             updatedRedis.setReference(updatedDto.getReference());
             updatedRedis.setDescription(updatedDto.getDescription());
-          /*  updatedRedis.setEvenementEnd(DateUtil.stringEnToDate(updatedDto.getEvenementEnd()));
-            updatedRedis.setEvenementStart(DateUtil.stringEnToDate(updatedDto.getEvenementStart()));*/
+            //updatedRedis.setEvenementEnd(DateUtil.stringEnToDate(updatedDto.getEvenementEnd()));
+          //  updatedRedis.setEvenementStart(DateUtil.stringEnToDate(updatedDto.getEvenementStart()));
             updatedRedis.setEvenementState(updatedDto.getEvenementState());
             updatedRedis.setSalle(updatedDto.getSalle());
             evenementAdminRedisService.save(updatedRedis);
             return updatedResponse;
         }
-    }
+    }*/
+
+
+
+   @PostMapping("")
+   public ResponseEntity<EvenementDto> save(@RequestBody EvenementDto dto) throws Exception {
+       String reference = dto.getReference();
+       String referenceBlocOperatoir = dto.getSalle().getBlocOperatoir().getReference();
+
+       Mono<EvenementRedis> evenementRedis = evenementAdminRedisService.findByReference(referenceBlocOperatoir, reference)
+               .switchIfEmpty(Mono.just(new EvenementRedis()));
+
+       evenementRedis.subscribe(redis -> {
+           if (redis.getId() == null) {
+               ResponseEntity<EvenementDto> savedResponse = null;
+               try {
+                   savedResponse = super.save(dto);
+                   EvenementDto savedDto = savedResponse.getBody();
+                   EvenementRedis savedRedis = new EvenementRedis();
+                   savedRedis.setId(savedDto.getId());
+                   savedRedis.setReference(savedDto.getReference());
+                   savedRedis.setDescription(savedDto.getDescription());
+                   savedRedis.setEvenementState(savedDto.getEvenementState());
+                   savedRedis.setSalle(savedDto.getSalle());
+                   evenementAdminRedisService.save(savedRedis);
+               } catch (Exception e) {
+                   throw new RuntimeException(e);
+               }
+
+               //return savedResponse;
+           } else {
+               ResponseEntity<EvenementDto> updatedResponse = null;
+               try {
+                   updatedResponse = super.update(dto);
+                   EvenementDto updatedDto = updatedResponse.getBody();
+                   EvenementRedis updatedRedis = new EvenementRedis();
+                   updatedRedis.setId(updatedDto.getId());
+                   updatedRedis.setReference(updatedDto.getReference());
+                   updatedRedis.setDescription(updatedDto.getDescription());
+                   updatedRedis.setEvenementState(updatedDto.getEvenementState());
+                   updatedRedis.setSalle(updatedDto.getSalle());
+                   evenementAdminRedisService.save(updatedRedis);
+               } catch (Exception e) {
+                   throw new RuntimeException(e);
+               }
+
+               //return updatedResponse;
+           }
+       });
+       return ResponseEntity.ok().build();
+   }
+
+
+
+
+
+
 
     @PutMapping("")
     public ResponseEntity<EvenementDto> update(@RequestBody EvenementDto dto) throws Exception {
@@ -223,6 +281,5 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
 
     @Autowired
     EvenementAdminService evenementAdminService;
-    @Autowired
-    EvenementDao evenementDao;
+
 }

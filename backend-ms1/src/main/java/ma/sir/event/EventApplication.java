@@ -40,7 +40,7 @@ public class EventApplication {
 
     public static void main(String[] args) {
         ctx = SpringApplication.run(EventApplication.class, args);
-        //constructData();
+        constructData();
     }
 
 
@@ -129,6 +129,7 @@ public class EventApplication {
         return " \"description\": \"" + description + "\" ";
     }
 
+
     private static String constructReference(int i) {
         String evenement = "EV-" + ((i % 100) + 1);
         String salle = "_S-" + (i % 30);
@@ -145,12 +146,15 @@ public class EventApplication {
 
     public static String constructData() {
         String res = "";
-        int lastElement = 100;
+        int lastElement = 1876;
         for (int i = 1; i <= lastElement; i++) {
             String reference = constructReference(i);
             String description = constructDescription(i);
-            res += "{ " + reference + ", " + description + " }";
-
+            String salleReference = "salle" + (i % 30);
+            String blocOperatoirReference = "bloc" + ((i % 10) + 1);
+            String json = "{ " + reference + ", " + description + ", \"salle\": { \"reference\": \"" + salleReference + "\", \"blocOperatoir\": { \"reference\": \"" + blocOperatoirReference + "\" } } }";
+            //res += "{ " + reference + ", " + description + " }";
+            res +=json;
             if (i < lastElement) {
                 res += ",";
             }

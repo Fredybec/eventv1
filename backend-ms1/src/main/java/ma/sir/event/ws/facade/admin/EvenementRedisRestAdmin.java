@@ -22,6 +22,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class EvenementRedisRestAdmin  {
     @Autowired
     private EvenementAdminRedisServiceImpl evenementAdminRedisService;
 
-    @PostMapping("")
+    /*@PostMapping("")
     public EvenementRedis save(@RequestBody EvenementRedis evenement) {
         return evenementAdminRedisService.save(evenement);
     }
@@ -50,8 +52,28 @@ public class EvenementRedisRestAdmin  {
     @DeleteMapping("/bloc-operatoire/{referenceBloc}/reference/{reference}")
     public int deleteByReference(@PathVariable String referenceBloc,@PathVariable String reference)   {
         return evenementAdminRedisService.deleteByReference(referenceBloc,reference);
+    }*/
+
+
+    @PostMapping("")
+    public Mono<EvenementRedis> save(@RequestBody EvenementRedis evenement) {
+        return evenementAdminRedisService.save(evenement);
     }
 
+    @GetMapping("/bloc-operatoire/{referenceBloc}")
+    public Flux<EvenementRedis> findAll(@PathVariable String referenceBloc) {
+        return evenementAdminRedisService.findAll(referenceBloc);
+    }
+
+    @GetMapping("/bloc-operatoire/{referenceBloc}/reference/{reference}")
+    public Mono<EvenementRedis> findByReference(@PathVariable String referenceBloc, @PathVariable String reference) {
+        return evenementAdminRedisService.findByReference(referenceBloc, reference);
+    }
+
+    @DeleteMapping("/bloc-operatoire/{referenceBloc}/reference/{reference}")
+    public Mono<Long> deleteByReference(@PathVariable String referenceBloc, @PathVariable String reference) {
+        return evenementAdminRedisService.deleteByReference(referenceBloc, reference);
+    }
 
 
 }
