@@ -159,14 +159,16 @@ public class EventApplication {
                 res += ",";
             }
         }
+        String fileName = "";
         try {
-            FileWriter fileWriter = new FileWriter("data-20.json");
+            fileName ="data-" + lastElement + ".json";
+            FileWriter fileWriter = new FileWriter(fileName);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write("[\n" + res + "]");
             bufferedWriter.close();
-            System.out.println("Data saved successfully to data-20.json file.");
+            System.out.println("Data saved successfully to "+fileName+" file.");
         } catch (IOException e) {
-            System.out.println("Error while saving data to data-20.json file.");
+            System.out.println("Error while saving data to "+fileName+" file.");
             e.printStackTrace();
         }
         return res;
