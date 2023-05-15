@@ -40,7 +40,7 @@ public class EventApplication {
 
     public static void main(String[] args) {
         ctx = SpringApplication.run(EventApplication.class, args);
-        constructData();
+        //constructData();
     }
 
 
@@ -67,8 +67,8 @@ public class EventApplication {
             if (false) {
 
                 createEvenementState();
-                createSalle();
                 createBlocOperatoir();
+                createSalle();
 
 
                 // Role admin
@@ -105,10 +105,11 @@ public class EventApplication {
     private void createSalle() {
         String reference = "salle";
         String code = "salle";
-        for (int i = 1; i < 100; i++) {
+        for (int i = 1; i < 11; i++) {
             Salle item = new Salle();
             item.setReference(fakeString(reference, i));
             item.setCode(fakeString(code, i));
+//            item.setBlocOperatoir(blocOperatoirService.findById(i % 2 + 1L));
             salleService.create(item);
         }
     }
@@ -116,7 +117,7 @@ public class EventApplication {
     private void createBlocOperatoir() {
         String reference = "blocOp";
         String code = "blocOp";
-        for (int i = 1; i < 100; i++) {
+        for (int i = 1; i < 5; i++) {
             BlocOperatoir item = new BlocOperatoir();
             item.setReference(fakeString(reference, i));
             item.setCode(fakeString(code, i));
@@ -154,21 +155,21 @@ public class EventApplication {
             String blocOperatoirReference = "bloc" + ((i % 10) + 1);
             String json = "{ " + reference + ", " + description + ", \"salle\": { \"reference\": \"" + salleReference + "\", \"blocOperatoir\": { \"reference\": \"" + blocOperatoirReference + "\" } } }";
             //res += "{ " + reference + ", " + description + " }";
-            res +=json;
+            res += json;
             if (i < lastElement) {
                 res += ",";
             }
         }
         String fileName = "";
         try {
-            fileName ="data-" + lastElement + ".json";
+            fileName = "data-" + lastElement + ".json";
             FileWriter fileWriter = new FileWriter(fileName);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write("[\n" + res + "]");
             bufferedWriter.close();
-            System.out.println("Data saved successfully to "+fileName+" file.");
+            System.out.println("Data saved successfully to " + fileName + " file.");
         } catch (IOException e) {
-            System.out.println("Error while saving data to "+fileName+" file.");
+            System.out.println("Error while saving data to " + fileName + " file.");
             e.printStackTrace();
         }
         return res;

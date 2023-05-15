@@ -1,28 +1,19 @@
 package ma.sir.event.bean.core;
 
-import java.io.Serializable;
-import java.util.Objects;
-
-
-
-
-
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ma.sir.event.zynerator.audit.AuditBusinessObject;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
-
-
 
 
 @Entity
 @Table(name = "bloc_operatoir")
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize
-@SequenceGenerator(name="bloc_operatoir_seq",sequenceName="bloc_operatoir_seq",allocationSize=1, initialValue = 1)
-public class BlocOperatoir   extends AuditBusinessObject   implements Serializable {
+@SequenceGenerator(name = "bloc_operatoir_seq", sequenceName = "bloc_operatoir_seq", allocationSize = 1, initialValue = 1)
+public class BlocOperatoir extends AuditBusinessObject implements Serializable {
 
     private Long id;
 
@@ -32,38 +23,44 @@ public class BlocOperatoir   extends AuditBusinessObject   implements Serializab
     private String code;
 
 
-
-    public BlocOperatoir(){
+    public BlocOperatoir() {
         super();
     }
 
-    public BlocOperatoir(Long id,String reference){
+    public BlocOperatoir(Long id) {
         this.id = id;
-        this.reference = reference ;
     }
 
-
+    public BlocOperatoir(Long id, String reference) {
+        this.id = id;
+        this.reference = reference;
+    }
 
 
     @Id
     @Column(name = "id")
-        @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="bloc_operatoir_seq")
-    public Long getId(){
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bloc_operatoir_seq")
+    public Long getId() {
         return this.id;
     }
-    public void setId(Long id){
+
+    public void setId(Long id) {
         this.id = id;
     }
-    public String getReference(){
+
+    public String getReference() {
         return this.reference;
     }
-    public void setReference(String reference){
+
+    public void setReference(String reference) {
         this.reference = reference;
     }
-    public String getCode(){
+
+    public String getCode() {
         return this.code;
     }
-    public void setCode(String code){
+
+    public void setCode(String code) {
         this.code = code;
     }
 

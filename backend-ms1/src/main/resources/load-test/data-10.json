@@ -1,6 +1,6 @@
 [
   {
-    "reference": "EV-2_S-1_B-2_05-15-2023",
+    "reference": "EVN-2_S-1_B-2_05-15-2023",
     "description": "desc 2",
     "salle": {
       "reference": "salle1",
@@ -10,7 +10,7 @@
     }
   },
   {
-    "reference": "EV-3_S-2_B-3_05-15-2023",
+    "reference": "EVN-3_S-2_B-3_05-15-2023",
     "description": "desc 3",
     "salle": {
       "reference": "salle2",
@@ -20,7 +20,7 @@
     }
   },
   {
-    "reference": "EV-4_S-3_B-4_05-15-2023",
+    "reference": "EVN-4_S-3_B-4_05-15-2023",
     "description": "desc 4",
     "salle": {
       "reference": "salle3",
@@ -30,7 +30,7 @@
     }
   },
   {
-    "reference": "EV-5_S-4_B-5_05-15-2023",
+    "reference": "EVN-5_S-4_B-5_05-15-2023",
     "description": "desc 5",
     "salle": {
       "reference": "salle4",
@@ -40,7 +40,7 @@
     }
   },
   {
-    "reference": "EV-6_S-5_B-6_05-15-2023",
+    "reference": "EVN-6_S-5_B-6_05-15-2023",
     "description": "desc 6",
     "salle": {
       "reference": "salle5",
@@ -50,7 +50,7 @@
     }
   },
   {
-    "reference": "EV-7_S-6_B-7_05-15-2023",
+    "reference": "EVN-7_S-6_B-7_05-15-2023",
     "description": "desc 7",
     "salle": {
       "reference": "salle6",
@@ -60,7 +60,7 @@
     }
   },
   {
-    "reference": "EV-8_S-7_B-8_05-15-2023",
+    "reference": "EVN-8_S-7_B-8_05-15-2023",
     "description": "desc 8",
     "salle": {
       "reference": "salle7",
@@ -70,7 +70,7 @@
     }
   },
   {
-    "reference": "EV-9_S-8_B-9_05-15-2023",
+    "reference": "EVN-9_S-8_B-9_05-15-2023",
     "description": "desc 9",
     "salle": {
       "reference": "salle8",
@@ -80,7 +80,7 @@
     }
   },
   {
-    "reference": "EV-10_S-9_B-10_05-15-2023",
+    "reference": "EVN-10_S-9_B-10_05-15-2023",
     "description": "desc 10",
     "salle": {
       "reference": "salle9",
@@ -90,7 +90,7 @@
     }
   },
   {
-    "reference": "EV-11_S-10_B-1_05-15-2023",
+    "reference": "EVN-11_S-10_B-1_05-15-2023",
     "description": "desc 1",
     "salle": {
       "reference": "salle10",
