@@ -127,7 +127,6 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
 
      public onBlocSelected() {
          this.subscribeToEventStream(this.selectedBloc.reference);
-
      }
 
 
