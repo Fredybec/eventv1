@@ -68,7 +68,7 @@
                         </span>
                     <span class=" p-float-label mr-3 align-search-items mt-4">
                             <p-dropdown [options]="blocOperatoires" [(ngModel)]="selectedBloc" id="7" [filter]="true"
-                                        [showClear]="true" (onChange)="onBlocSelected()" placeholder="{{'Evenement state' | translate}}" optionLabel="reference">
+                                        [showClear]="true" (onChange)="openWebS()" placeholder="{{'Evenement state' | translate}}" optionLabel="reference">
                             </p-dropdown>
                         </span>
                        <span class=" p-float-label mr-3 align-search-items mt-4">
@@ -183,6 +183,7 @@
                     </div>
                 </ng-template>
             </p-table>
+
         </div>
 
         <app-evenement-create-admin></app-evenement-create-admin>

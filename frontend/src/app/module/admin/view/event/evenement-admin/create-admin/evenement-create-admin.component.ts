@@ -37,8 +37,7 @@ export class EvenementCreateAdminComponent extends AbstractCreateController<Even
 
  save() {
 
-        //this.item.reference=this.item.salle.blocOperatoir.reference + '-' + this.item.salle.reference + '-' + (this.items.length + 1);
-        this.item.reference=this.item.salle.reference + '-' +  (this.items.length + 1);
+
      super.save();
  }
 

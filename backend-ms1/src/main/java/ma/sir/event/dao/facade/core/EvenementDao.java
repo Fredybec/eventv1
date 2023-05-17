@@ -20,4 +20,6 @@ public interface EvenementDao extends AbstractRepository<Evenement,Long>  {
 
     @Query("SELECT NEW Evenement(item.id,item.reference) FROM Evenement item")
     List<Evenement> findAllOptimized();
+
+    List<Evenement> findBySalleBlocOperatoirReference(String reference);
 }
