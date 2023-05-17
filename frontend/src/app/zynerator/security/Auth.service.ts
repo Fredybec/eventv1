@@ -26,6 +26,7 @@ export class AuthService {
          public loginAdmin(username: string, password: string) {
        this.http.post<any>(this.API + 'login', { username, password }, { observe: 'response' }).subscribe(
             resp => {
+                console.log(resp)
                 this.error = null;
                 const jwt = resp.headers.get('Authorization');
                 jwt != null ? this.tokenService.saveToken(jwt) : false;

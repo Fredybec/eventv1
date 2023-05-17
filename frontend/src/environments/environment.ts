@@ -12,9 +12,10 @@ export const environment = {
   falseValue: 'Faux',
   emptyForExport: '-----',
 
-  baseUrl: 'http://localhost:8036/api/',
-  apiUrl: 'http://localhost:8036/api/',
-  loginUrl: 'http://localhost:8036/',
+  baseUrl: 'http://localhost:8038/api/',
+  apiUrl: 'http://localhost:8038/api/',
+  loginUrl: 'http://localhost:8038/',
+  socketUrl: 'http://localhost:8088/',
   rootAppUrl:'app',
 };
 
